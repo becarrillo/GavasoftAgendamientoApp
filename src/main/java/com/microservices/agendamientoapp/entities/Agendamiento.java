@@ -1,6 +1,7 @@
 package com.microservices.agendamientoapp.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "agendamientos")
 public class Agendamiento {
@@ -23,9 +25,42 @@ public class Agendamiento {
     @Column(name = "servicio_id")
     private String servicioId;
 
+    @Column(name = "estado")
+    private String estado = "tomado";
+
     @Column(name = "usuario_cliente_id")
     private Short usuarioClienteId;
 
-    @Column(name = "estado")
-    private String estado;
+    @Column(name = "carrito_de_compras_id")
+    private String carritoDeComprasId;
+
+    public Agendamiento(
+            LocalDateTime fechaHora,
+            String servicioId
+    ) {
+        this.fechaHora = fechaHora;
+        this.servicioId = servicioId;
+    }
+
+    public Agendamiento(
+            LocalDateTime fechaHora,
+            String servicioId,
+            Short usuarioClienteId
+    ) {
+        this.fechaHora = fechaHora;
+        this.servicioId = servicioId;
+        this.usuarioClienteId = usuarioClienteId;
+    }
+
+    public Agendamiento(
+            LocalDateTime fechaHora,
+            String servicioId,
+            Short usuarioClienteId,
+            String carritoDeComprasId
+    ) {
+        this.fechaHora = fechaHora;
+        this.servicioId = servicioId;
+        this.usuarioClienteId = usuarioClienteId;
+        this.carritoDeComprasId = carritoDeComprasId;
+    }
 }

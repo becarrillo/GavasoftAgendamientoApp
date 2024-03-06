@@ -4,6 +4,7 @@ import com.microservices.agendamientoapp.entities.Agendamiento;
 import com.microservices.agendamientoapp.repositories.AgendamientoRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,13 @@ public class AgendamientoService {
     private AgendamientoRepository agendamientoRepository;
     
     public Agendamiento save(Agendamiento agendamiento) {
+        agendamiento.setFechaHora(LocalDateTime.now(ZoneId.of("GMT-5")));   // Timestamp (Bogotá)
         return agendamientoRepository.save(agendamiento);
     }
 
     public Agendamiento getOne(LocalDateTime fechaHora) {
-        final Optional<Agendamiento> opt = agendamientoRepository.findAll().stream().filter(a -> a.getFechaHora().equals(fechaHora)).findAny();
+        final Optional<Agendamiento> opt = agendamientoRepository.findAll().stream()
+                .filter(a -> a.getFechaHora().equals(fechaHora)).findAny();
         return opt.orElse(null);
     }
     
@@ -34,6 +37,7 @@ public class AgendamientoService {
         if (foundAgendamiento != null) {
             foundAgendamiento.setFechaHora(agendamiento.getFechaHora());
             foundAgendamiento.setServicioId(agendamiento.getServicioId());
+            foundAgendamiento.setUsuarioClienteId(agendamiento.getUsuarioClienteId());
             return agendamientoRepository.save(foundAgendamiento);
         }
         return null;
@@ -41,7 +45,7 @@ public class AgendamientoService {
 
     public String cancelOneById(String agendamientoId) {
         final Agendamiento foundAgendamiento = this.getOneById(agendamientoId);
-        agendamientoRepository.deleteById(foundAgendamiento.getAgendamientoId());
+        agendamientoRepository.delete(foundAgendamiento);
         return agendamientoId;
     }
 

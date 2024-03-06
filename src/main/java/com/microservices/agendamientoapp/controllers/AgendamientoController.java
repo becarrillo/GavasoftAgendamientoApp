@@ -23,7 +23,10 @@ public class AgendamientoController {
     }
 
     @PostMapping(path = "/modificar/{agendamientoId}")
-    public Agendamiento modificar(@PathVariable("agendamientoId") String agendamientoId, @RequestBody Agendamiento agendamiento) {
+    public Agendamiento modificar(
+            @PathVariable("agendamientoId") String agendamientoId,
+            @RequestBody Agendamiento agendamiento
+    ) {
         return agendamientoService.updateById(agendamientoId, agendamiento);
     }
 

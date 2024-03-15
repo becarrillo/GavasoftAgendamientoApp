@@ -22,12 +22,30 @@ public class AgendamientoController {
         return agendamientoService.getOneById(agendamientoId);
     }
 
+    @GetMapping(path = "/carritos-de-compras/{carritoId}")
+    public List<Agendamiento> listarPorCarritoDeComprasId(@PathVariable("carritoId") String carritoDeComprasId) {
+        return agendamientoService.listByCarritoDeComprasId(carritoDeComprasId);
+    }
+
+    @GetMapping(path = "/clientes/{usuarioClienteId}/tomados")
+    public List<Agendamiento> listarTomadosPorUsuarioClienteId(@PathVariable Short usuarioClienteId) {
+        return agendamientoService.listTomadosByUsuarioClienteId(usuarioClienteId);
+    }
+
     @PostMapping(path = "/modificar/{agendamientoId}")
     public Agendamiento modificar(
             @PathVariable("agendamientoId") String agendamientoId,
             @RequestBody Agendamiento agendamiento
     ) {
         return agendamientoService.updateById(agendamientoId, agendamiento);
+    }
+
+    @PutMapping(path = "/carritos-de-compras/{carritoId}/actualizar-estado/facturado")
+    public void actualizarEstadoToFacturado(
+            @PathVariable("carritoId") String carritoDeCompras,
+            @RequestBody List<Agendamiento> agendamientoList
+    ) {
+        agendamientoService.setEstadoToFacturado(agendamientoList);
     }
 
     @GetMapping(path = "/cancelar/{agendamientoId}")
@@ -42,7 +60,8 @@ public class AgendamientoController {
 
     @GetMapping(path = "/filtrar-por-cliente/{usuarioClienteId}")
     public List<Agendamiento> listarPorUsuarioClienteId(@PathVariable("usuarioClienteId") Short usuarioClienteId) {
-        return agendamientoService.listByUsuarioClienteId(usuarioClienteId);
+        return agendamientoService.
+                listByUsuarioClienteId(usuarioClienteId);
 
     }
 

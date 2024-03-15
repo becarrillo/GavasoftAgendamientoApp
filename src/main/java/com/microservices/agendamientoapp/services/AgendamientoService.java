@@ -4,7 +4,6 @@ import com.microservices.agendamientoapp.entities.Agendamiento;
 import com.microservices.agendamientoapp.repositories.AgendamientoRepository;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ public class AgendamientoService {
     private AgendamientoRepository agendamientoRepository;
     
     public Agendamiento save(Agendamiento agendamiento) {
-        agendamiento.setFechaHora(LocalDateTime.now(ZoneId.of("GMT-5")));   // Timestamp (Bogotá)
         return agendamientoRepository.save(agendamiento);
     }
 
@@ -29,6 +27,35 @@ public class AgendamientoService {
     public Agendamiento getOneById(String agendamientoId) {
         final Optional<Agendamiento> optAgendamiento = agendamientoRepository.findById(agendamientoId);
         return optAgendamiento.orElse(null);
+    }
+
+    public List<Agendamiento> listByCarritoDeComprasId(String carritoDeComprasId) {
+        final Optional<List<Agendamiento>> agendamientosList = Optional.of(agendamientoRepository.findAll());
+        return agendamientosList.orElse(null)
+                .stream()
+                .filter(a -> a.getCarritoDeComprasId().equals(carritoDeComprasId))
+                .toList();
+    }
+
+    public List<Agendamiento> listByCarritoDeComprasAndUsuarioClienteId(String carritoDeComprasId, Short usuarioClienteId) {
+        final Optional<List<Agendamiento>> optAgendamientosList = Optional.of(agendamientoRepository.findAll()
+                .stream()
+                .toList()
+        );
+        return optAgendamientosList.orElse(null);
+    }
+
+    public List<Agendamiento> listTomadosByUsuarioClienteId(Short usuarioClienteId) {
+        final Optional<List<Agendamiento>> optAgendamientosList = Optional.of(agendamientoRepository.findAll()
+                .stream()
+                .filter(a -> a.getUsuarioClienteId().equals(usuarioClienteId) && a.getEstado().equals("tomado"))
+                .toList()
+        );
+        return optAgendamientosList.orElse(null);
+    }
+
+    public void setEstadoToFacturado(List<Agendamiento> agendamientosList) {
+        agendamientosList.forEach(a -> a.setEstado("facturado"));
     }
 
     public Agendamiento updateById(String agendamientoId, Agendamiento agendamiento) {

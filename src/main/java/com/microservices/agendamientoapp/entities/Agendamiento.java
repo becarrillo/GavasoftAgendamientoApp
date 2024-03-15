@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "agendamientos")
@@ -26,7 +25,7 @@ public class Agendamiento {
     private String servicioId;
 
     @Column(name = "estado")
-    private String estado = "tomado";
+    private String estado;
 
     @Column(name = "usuario_cliente_id")
     private Short usuarioClienteId;
@@ -36,19 +35,23 @@ public class Agendamiento {
 
     public Agendamiento(
             LocalDateTime fechaHora,
+            String estado,
             String servicioId
     ) {
         this.fechaHora = fechaHora;
+        this.estado = estado;
         this.servicioId = servicioId;
     }
 
     public Agendamiento(
             LocalDateTime fechaHora,
             String servicioId,
+            String estado,
             Short usuarioClienteId
     ) {
         this.fechaHora = fechaHora;
         this.servicioId = servicioId;
+        this.estado = estado;
         this.usuarioClienteId = usuarioClienteId;
     }
 

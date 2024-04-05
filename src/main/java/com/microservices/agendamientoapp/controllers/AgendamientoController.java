@@ -38,7 +38,7 @@ public class AgendamientoController {
         return agendamientoService.listByCarritoDeComprasId(carritoDeComprasId);
     }
 
-    @GetMapping(path = "/clientes/{usuarioClienteId}")
+    @GetMapping(path = "/clientes/{usuarioClienteId}/tomados")
     public List<Agendamiento> listarTomadosPorUsuarioClienteId(@PathVariable Short usuarioClienteId) {
         return agendamientoService.listTomadosByUsuarioClienteId(usuarioClienteId);
     }

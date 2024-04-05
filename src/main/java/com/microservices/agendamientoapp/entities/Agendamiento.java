@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "agendamientos")
@@ -46,12 +47,10 @@ public class Agendamiento {
     public Agendamiento(
             LocalDateTime fechaHora,
             String servicioId,
-            String estado,
             Short usuarioClienteId
     ) {
         this.fechaHora = fechaHora;
         this.servicioId = servicioId;
-        this.estado = estado;
         this.usuarioClienteId = usuarioClienteId;
     }
 

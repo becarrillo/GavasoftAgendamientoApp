@@ -40,6 +40,7 @@ public class AgendamientoService {
     public List<Agendamiento> listByCarritoDeComprasAndUsuarioClienteId(String carritoDeComprasId, Short usuarioClienteId) {
         final Optional<List<Agendamiento>> optAgendamientosList = Optional.of(agendamientoRepository.findAll()
                 .stream()
+                .filter(a -> a.getCarritoDeComprasId().equals(carritoDeComprasId) && a.getUsuarioClienteId().equals(usuarioClienteId))
                 .toList()
         );
         return optAgendamientosList.orElse(null);
@@ -54,8 +55,20 @@ public class AgendamientoService {
         return optAgendamientosList.orElse(null);
     }
 
-    public void setEstadoToFacturado(List<Agendamiento> agendamientosList) {
+    public List<Agendamiento> listPagadosByUsuarioClienteId(Short usuarioClienteId) {
+        final Optional<List<Agendamiento>> optAgendamientosList = Optional.of(agendamientoRepository.findAll()
+                .stream()
+                .filter(a -> a.getUsuarioClienteId().equals(usuarioClienteId) && (
+                        a.getEstado().equals("pagado") || a.getEstado().equals("materializado"))
+                )
+                .toList()
+        );
+        return optAgendamientosList.orElse(null);
+    }
+
+    public List<Agendamiento> setEstadoToFacturado(List<Agendamiento> agendamientosList) {
         agendamientosList.forEach(a -> a.setEstado("facturado"));
+        return agendamientosList;
     }
 
     public Agendamiento updateById(String agendamientoId, Agendamiento agendamiento) {

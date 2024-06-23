@@ -16,6 +16,9 @@ target/
 # environment variables
 src/main/resources/application.yml
 
+# Dockerfile
+Dockerfile
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

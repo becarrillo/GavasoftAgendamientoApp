@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+
+import java.time.*;
 
 @Getter
 @Setter
@@ -49,6 +50,7 @@ public class Agendamiento {
             String servicioId,
             Short usuarioClienteId
     ) {
+        this.estado = "tomado";
         this.fechaHora = fechaHora;
         this.servicioId = servicioId;
         this.usuarioClienteId = usuarioClienteId;
@@ -60,6 +62,7 @@ public class Agendamiento {
             Short usuarioClienteId,
             String carritoDeComprasId
     ) {
+        this.estado = "tomado";
         this.fechaHora = fechaHora;
         this.servicioId = servicioId;
         this.usuarioClienteId = usuarioClienteId;

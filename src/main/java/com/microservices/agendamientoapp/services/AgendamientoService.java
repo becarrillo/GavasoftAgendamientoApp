@@ -4,8 +4,10 @@ import com.microservices.agendamientoapp.entities.Agendamiento;
 import com.microservices.agendamientoapp.repositories.AgendamientoRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,17 @@ public class AgendamientoService {
     private AgendamientoRepository agendamientoRepository;
     
     public Agendamiento save(Agendamiento agendamiento) {
+        agendamiento.setFechaHora(
+            LocalDateTime.of(
+                agendamiento.getFechaHora().getYear(),
+                agendamiento.getFechaHora().getMonthValue(),
+                agendamiento.getFechaHora().getDayOfMonth(),
+                agendamiento.getFechaHora().getHour(),
+                agendamiento.getFechaHora().getMinute(),
+                agendamiento.getFechaHora().getSecond()
+            )
+                .atZone(ZoneId.of("GMT-5"))
+                .toLocalDateTime()); // Corrección horaria a la de Bogotá
         return agendamientoRepository.save(agendamiento);
     }
 
@@ -27,6 +40,14 @@ public class AgendamientoService {
     public Agendamiento getOneById(String agendamientoId) {
         final Optional<Agendamiento> optAgendamiento = agendamientoRepository.findById(agendamientoId);
         return optAgendamiento.orElse(null);
+    }
+
+    public Agendamiento getCarritoDeComprasIdByUsuarioClienteId(Short usuarioClienteId) {
+        final Optional<Agendamiento> agendamiento = agendamientoRepository.findAll()
+                    .stream()
+                    .filter(a -> a.getUsuarioClienteId().equals(usuarioClienteId) && a.getEstado().equals("tomado"))
+                    .findAny();
+        return agendamiento.orElse(null);
     }
 
     public List<Agendamiento> listByCarritoDeComprasId(String carritoDeComprasId) {
@@ -92,10 +113,10 @@ public class AgendamientoService {
     public Agendamiento cancelOnePaidById(String agendamientoId) {
         final Agendamiento foundAgendamiento = this.getOneById(agendamientoId);
 
-        if (foundAgendamiento != null && foundAgendamiento.getEstado().equals("pago")) {
+        if (foundAgendamiento != null && foundAgendamiento.getEstado().equals("pagado")) {
             foundAgendamiento.setEstado("cancelado");
-            agendamientoRepository.save(foundAgendamiento);   // Se actualiza con .save()
-            return foundAgendamiento;
+            return agendamientoRepository
+                    .save(foundAgendamiento);   // Se actualiza con .save()
         }
         return null;
     }

@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.microservices.agendamientoapp.entities.Agendamiento;
 import com.microservices.agendamientoapp.services.AgendamientoService;
+
 import java.util.List;
 import java.util.Objects;
 
+
 @RestController
-@RequestMapping(path = "/agendamientos")
+@CrossOrigin("http://USUARIO-APP")
+@RequestMapping(path = "/v1/agendamientos")
 public class AgendamientoController {
     @Autowired
     private AgendamientoService agendamientoService;
@@ -18,22 +21,20 @@ public class AgendamientoController {
         return agendamientoService.save(agendamiento);
     }
 
-    @GetMapping(path = "/consultar/{agendamientoId}")
+    @GetMapping(path = "/{agendamientoId}")
     public Agendamiento consultar(@PathVariable("agendamientoId") String agendamientoId) {
         return agendamientoService.getOneById(agendamientoId);
     }
 
-    @GetMapping(path = "/clientes/{usuarioClienteId}/carrito-de-compras-id")
-    public String obtenerCarritoDeComprasIdPorUsuarioClienteId(@PathVariable Short usuarioClienteId) {
-        return Objects.requireNonNull(agendamientoService
-                .listTomadosByUsuarioClienteId(usuarioClienteId)
-                .stream()
-                .findFirst()
-                .orElse(null))
-                .getCarritoDeComprasId();
+    @GetMapping(path = "/filtrar-por-cliente/{usuarioClienteId}/carrito-de-compras-id")
+    public String obtenerCarritoDeComprasIdPorUsuarioClienteId(@PathVariable("usuarioClienteId") Short usuarioClienteId) {
+        final Agendamiento agendamiento = Objects.requireNonNull(
+            agendamientoService.getCarritoDeComprasIdByUsuarioClienteId(usuarioClienteId)
+        );
+        return agendamiento.getCarritoDeComprasId();
     }
 
-    @GetMapping(path = "/carritos-de-compras/{carritoId}")
+    @GetMapping(path = "/filtrar-por-carrito-de-compras/{carritoId}")
     public List<Agendamiento> listarPorCarritoDeComprasId(@PathVariable("carritoId") String carritoDeComprasId) {
         return agendamientoService.listByCarritoDeComprasId(carritoDeComprasId);
     }
@@ -48,7 +49,7 @@ public class AgendamientoController {
         return agendamientoService.listPagadosByUsuarioClienteId(usuarioClienteId);
     }
 
-    @PostMapping(path = "/{agendamientoId}/modificar")
+    @GetMapping(path = "/{agendamientoId}/modificar")
     public Agendamiento modificar(
             @PathVariable("agendamientoId") String agendamientoId,
             @RequestBody Agendamiento agendamiento
@@ -56,12 +57,13 @@ public class AgendamientoController {
         return agendamientoService.updateById(agendamientoId, agendamiento);
     }
 
-    @PutMapping(path = "/carritos-de-compras/{carritoId}/actualizar-estado/facturado")
+    @GetMapping(path = "/carritos-de-compras/{carritoId}/actualizar-estado/facturado")
     public List<Agendamiento> actualizarEstadoToFacturado(
-            @PathVariable("carritoId") String carritoDeCompras,
-            @RequestBody List<Agendamiento> agendamientoList
+            @PathVariable("carritoId") String carritoDeCompras
     ) {
-        return agendamientoService.setEstadoToFacturado(agendamientoList);
+        return agendamientoService.setEstadoToFacturado(
+            agendamientoService.listByCarritoDeComprasId(carritoDeCompras)
+        );
     }
 
     @GetMapping(path = "/{agendamientoId}/cancelar")

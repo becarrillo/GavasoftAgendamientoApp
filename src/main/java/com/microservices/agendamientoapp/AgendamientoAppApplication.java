@@ -11,5 +11,4 @@ public class AgendamientoAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AgendamientoAppApplication.class, args);
 	}
-
 }

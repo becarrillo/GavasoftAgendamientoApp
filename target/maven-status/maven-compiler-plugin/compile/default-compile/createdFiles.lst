@@ -1,5 +1,0 @@
-com/microservices/agendamientoapp/controllers/AgendamientoController.class
-com/microservices/agendamientoapp/entities/Agendamiento.class
-com/microservices/agendamientoapp/services/AgendamientoService.class
-com/microservices/agendamientoapp/repositories/AgendamientoRepository.class
-com/microservices/agendamientoapp/AgendamientoAppApplication.class

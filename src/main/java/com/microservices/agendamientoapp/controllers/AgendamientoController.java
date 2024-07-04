@@ -5,12 +5,13 @@ import org.springframework.web.bind.annotation.*;
 import com.microservices.agendamientoapp.entities.Agendamiento;
 import com.microservices.agendamientoapp.services.AgendamientoService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 
 @RestController
-@CrossOrigin("http://USUARIO-APP")
+@CrossOrigin("http://usuario-app.railway.internal:8081")
 @RequestMapping(path = "/v1/agendamientos")
 public class AgendamientoController {
     @Autowired
@@ -24,6 +25,11 @@ public class AgendamientoController {
     @GetMapping(path = "/{agendamientoId}")
     public Agendamiento consultar(@PathVariable("agendamientoId") String agendamientoId) {
         return agendamientoService.getOneById(agendamientoId);
+    }
+    
+    @GetMapping(path = "/consultar-por-fecha-hora/{fechaHora}")
+    public Agendamiento consultarPorFechaHora(@PathVariable LocalDateTime fechaHora) {
+    	return agendamientoService.queryByFechaHora(fechaHora);
     }
 
     @GetMapping(path = "/filtrar-por-cliente/{usuarioClienteId}/carrito-de-compras-id")

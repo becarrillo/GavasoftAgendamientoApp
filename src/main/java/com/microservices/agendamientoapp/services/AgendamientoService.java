@@ -67,6 +67,12 @@ public class AgendamientoService {
         return optAgendamientosList.orElse(null);
     }
 
+    public Agendamiento queryByFechaHora(LocalDateTime dateTime) {
+    	final Optional<Agendamiento> optAgendamiento = Optional
+            .of(agendamientoRepository.findByFechaHora(dateTime));
+        return optAgendamiento.orElse(null);
+    }
+
     public List<Agendamiento> listTomadosByUsuarioClienteId(Short usuarioClienteId) {
         final Optional<List<Agendamiento>> optAgendamientosList = Optional.of(agendamientoRepository.findAll()
                 .stream()
@@ -122,7 +128,7 @@ public class AgendamientoService {
     }
 
     public List<Agendamiento> listByUsuarioClienteId(Short usuarioClienteId) {
-        return agendamientoRepository.findByUsuarioClienteId(usuarioClienteId);
+        return agendamientoRepository.findAllByUsuarioClienteId(usuarioClienteId);
     }
 
     public List<Agendamiento> listAll() {
@@ -130,6 +136,8 @@ public class AgendamientoService {
     }
 
     public List<Agendamiento> listAllByUsuarioClienteId(Short usuarioClienteId) {
-        return agendamientoRepository.findAll().stream().filter(a -> a.getUsuarioClienteId().equals(usuarioClienteId)).toList();
+        return agendamientoRepository.findAll().stream()
+                .filter(a -> a.getUsuarioClienteId().equals(usuarioClienteId))
+                .toList();
     }
 }
